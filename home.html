@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <div class="login-form">
+            <label for="Email">Email</label>
+            <input type="text" id="email" placeholder="Enter Your email">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password">
+            <p id="passwordError" class="error"></p>
+
+            <button id="loginButton">Login</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginButton").addEventListener("click", function () {
+            // Reset error message
+            document.getElementById("passwordError").textContent = "";
+
+            // Get the password value
+            var password = document.getElementById("password").value;
+
+            // Regular expression for password validation
+            var passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/;
+
+            // Validate password
+            if (!passwordPattern.test(password)) {
+                document.getElementById("passwordError").textContent = "Invalid password format. Password must contain at least 6 characters, including uppercase, lowercase, and a number.";
+                return; // Exit function if validation fails
+            }
+
+            // If password validation passes, redirect to "calculator.html"
+            window.location.href = "calculator.html";
+        });
+    </script>
+</body>
+
+</html>

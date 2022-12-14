@@ -1,0 +1,20 @@
+package com.moviereview;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class UsersDao extends Dao{
+	
+	protected UsersDao() throws Exception {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public static Users findByEmail(String email)throws  Exception{
+		String sql= "Select * from Users where email=?";
+		try(PreparedStatement stmt= con.prepareStatement(sql) ){
+			try(ResultSet rs = stmt.executeQuery())
+		}
+	}
+	
+}

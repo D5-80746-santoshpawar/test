@@ -1,0 +1,67 @@
+GitHub Login and Token revised.
+
+Username: sunbeam-pdac
+Token: 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
+
+git clone paste link
+
+C++ Repository: https://github.com/sunbeam-dac-sep2023/cpp.git
+https://github.com/sunbeam-dac-sep2023/ads.git
+https://github.com/sunbeam-dac-sep2023/hackathon1
+
+
+Algo and DS GitHub Link:-
+https://github.com/sunbeam-dac-sep2023/osc.git
+Token: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
+
+Use this username and token only to pull the data from Sunbeam repositories.
+D5-80746-santoshpawar
+my token  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
+ git status
+ git add filename
+ git commit -m "message "
+ git push -u origin main
+
+
+
+
+
+
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+ 
+ 
+ 
+ 
+ # Initialize a new Git repository
+git init
+
+# Add the files to the repository
+git add .
+
+# Commit the changes
+git commit -m "Initial commit"
+
+# Add your GitHub repository as the remote origin
+git remote add origin https://github.com/your-username/your-repo.git
+
+# Push the code to GitHub
+git push -u origin master
+

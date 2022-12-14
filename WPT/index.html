@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</form>
+    </title>
+</head>
+
+<body>
+    <table id="mytable" border="1">
+        <tr>
+            <td>cnum</td>
+            <td id="cnum"></td>
+            <td>
+                <div id="divForNumError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>cname</td>
+            <td>
+                <input type="text" id="cname">
+            </td>
+            <td>
+                <div id="divForNameError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td id="email"></td>
+            <td>
+                <div id="divForMailRelatedError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td>
+                <input type="password" id="pass">
+            </td>
+            <td>
+                <div id="divForFirstPasswordError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>confirm_pass</td>
+            <td>
+                <input type="password" id="conf_pass">
+            </td>
+            <td>
+                <div id="divForSecondPasswordError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>mobile</td>
+            <td id="mobno"></td>
+            <td></td>
+        </tr>
+        <!-- <tr>
+            <td>city</td>
+            <td id="city"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>state</td>
+            <td id="state"></td>
+            <td></td>
+        </tr> -->
+        <tr>
+            <td>pincode</td>
+            <td id="pin"></td>
+            <td>
+                <div id="divForPincodeError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>request_payment_mode</td>
+            <td id="pay_mode"></td>
+            <td>
+                <div id="divForPaymentModeError"></div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" onclick="DoValidate()">
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+    <script>
+
+
+        function ValidateForEmpty(controlID, errorDivID, errorMsg) {
+            var refToControl = document.getElementById(controlID);
+            var refToErrorDiv = document.getElementById(errorDivID);
+
+            if (refToControl.value == "") {
+                refToErrorDiv.innerText = errorMsg;
+                return false;
+            } else {
+                refToErrorDiv.innerText = "";
+                return true;
+            }
+        }
+
+        function ValidatePassword(passControlID, pass2ControlID, passDivErrorID, pass2DivErrorID) {
+
+            // debugger;
+            if (ValidateForEmpty(passControlID, passDivErrorID, "cant be empty") == true) {
+                var refToPass1 = document.getElementById(passControlID);
+                var refToPass2 = document.getElementById(pass2ControlID);
+                var refToPass2ErrorDiv = document.getElementById(pass2DivErrorID);
+                if (refToPass1.value != refToPass2.value) {
+                    refToPass2ErrorDiv.innerText = "no match";
+                } else {
+                    pass2DivErrorID = "";
+                    return true
+                }
+            };
+
+
+        }
+
+        function DoValidate() {
+
+            debugger;
+            if (ValidateForEmpty("cname", "divForNameError", "CANT BE EMPTY") &&
+                ValidatePassword("pass", "conf_pass", "divForFirstPasswordError", "divForSecondPasswordError")) {
+                    storeDetails();
+                    window.location.href = './2nd.html';
+                }
+        }
+
+        function storeDetails(){
+            var refToName = document.getElementById("cname");
+            var refToPass = document.getElementById("pass");
+            window.sessionStorage.setItem("name", refToName.value);
+            window.sessionStorage.setItem("password", refToPass.value);
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

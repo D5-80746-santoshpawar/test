@@ -1,0 +1,14 @@
+package com.moviereview;
+
+import java.security.Timestamp;
+
+public class Reviews {
+	
+	int id;
+	int movie_id;
+	String review;
+	int rating;
+	int user_id;
+	Timestamp modified;
+	
+}

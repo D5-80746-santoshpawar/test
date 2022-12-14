@@ -1,0 +1,45 @@
+package com.moviereview;
+
+import java.sql.Date;
+
+public class Movies {
+	
+	int movie_id;
+	String title;
+	Date releases;
+	
+	public Movies() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Movies(int movie_id, String title, Date releases) {
+		super();
+		this.movie_id = movie_id;
+		this.title = title;
+		this.releases = releases;
+	}
+	
+	
+	public int getMovie_id() {
+		return movie_id;
+	}
+	public void setMovie_id(int movie_id) {
+		this.movie_id = movie_id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public Date getReleases() {
+		return releases;
+	}
+	public void setReleases(Date release) {
+		this.releases = release;
+	}
+	
+	
+	
+	
+}

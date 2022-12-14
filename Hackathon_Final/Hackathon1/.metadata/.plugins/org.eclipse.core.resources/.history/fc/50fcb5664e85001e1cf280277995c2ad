@@ -1,0 +1,91 @@
+
+package com.moviereview;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ReviewsDao extends Dao{
+public ReviewsDao() throws Exception{
+}
+
+public int writeReview(Reviews r) throws Exception {
+String sql = "INSERT INTO reviews VALUES(default, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+try(PreparedStatement stmt = con.prepareStatement(sql)) {
+stmt.setInt(1, r.getMovie_id());
+stmt.setString(2, r.getReview());
+stmt.setInt(3, r.getRating());
+stmt.setInt(4, r.getUser_id());
+//stmt.setTimestamp(5, r.getModified());
+int count = stmt.executeUpdate();
+return count;
+} //stmt.close();
+}
+
+public int editReview(int userid, int rating, String review) throws Exception {
+        String query = "UPDATE reviews SET rating=?, review=? WHERE review_id=?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, rating);
+            preparedStatement.setString(2, review);
+            preparedStatement.setInt(3, userid);
+            preparedStatement.executeUpdate();
+            int count = preparedStatement.executeUpdate();
+return count;
+        }
+    }
+
+public List<Reviews> displayAllReviews() throws Exception {
+List<Reviews> allReviews = new ArrayList<>();
+String sql = "SELECT * FROM reviews";
+try(PreparedStatement stmt = con.prepareStatement(sql)) {
+try(ResultSet rs = stmt.executeQuery()) {
+while(rs.next()) {
+
+int reviewid = rs.getInt("review_id");
+int movieId = rs.getInt("movie_id");
+String review = rs.getString("review");
+int rating = rs.getInt("rating");
+int userid = rs.getInt("user_id");
+Timestamp modified = rs.getTimestamp("modified");
+allReviews.add(new Reviews(reviewid, movieId, review, rating, userid, modified)) ;
+}
+} // rs.close();
+} // stmt.close();
+return allReviews;
+}
+public List<Reviews> displayMyReviews(int userid) throws Exception {
+	List<Reviews> allReviews = new ArrayList<>();
+	String sql = "SELECT * FROM reviews WHERE user_id=?";
+	try(PreparedStatement stmt = con.prepareStatement(sql)) {
+		stmt.setInt(1, userid);
+		try(ResultSet rs = stmt.executeQuery()) {
+			while(rs.next()) {
+				int reviewid = rs.getInt("review_id");
+				int movieId = rs.getInt("movie_id");
+				String review = rs.getString("review");
+				int rating = rs.getInt("rating");
+				Timestamp modified = rs.getTimestamp("modified");
+				allReviews.add(new Reviews(reviewid, movieId, review, rating, userid, modified)) ;
+			}
+		} // rs.close();
+	} // stmt.close();
+	return allReviews;
+}
+
+public int deleteReview(int reviewid, int userid) throws Exception {
+String sql = "DELETE FROM reviews WHERE review_id=? AND user_id=?";
+try(PreparedStatement stmt = con.prepareStatement(sql)) {
+stmt.setInt(1, reviewid);
+stmt.setInt(1, userid);
+int cnt = stmt.executeUpdate();
+return cnt;
+} //stmt.close();
+}
+}
+

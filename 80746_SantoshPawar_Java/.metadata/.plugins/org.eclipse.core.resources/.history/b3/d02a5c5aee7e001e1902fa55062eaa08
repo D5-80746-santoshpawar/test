@@ -1,0 +1,149 @@
+
+package com.sunbeam;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class AccountHolderDetailsDAO {
+	Connection connection;
+
+	public AccountHolderDetailsDAO() {
+		try {
+			connection = DbUtil.getConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void addAccountHolder(AccountHolderDetails accountHolder) {
+
+		String sql = "INSERT INTO acc_holder_details (name, email, birthdate, balance, acctype_id) VALUES (?, ?, ?, ?, ?)";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			preparedStatement.setString(1, accountHolder.getName());
+			preparedStatement.setString(2, accountHolder.getEmail());
+			preparedStatement.setString(3, accountHolder.getBirthdate());
+			preparedStatement.setDouble(4, accountHolder.getBalance());
+			preparedStatement.setInt(5, accountHolder.getAccTypeId());
+			preparedStatement.executeUpdate();
+
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				accountHolder.setAccNo(generatedKeys.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<AccountHolderDetails> getAllAccountHolders() {
+		List<AccountHolderDetails> accountHolders = new ArrayList<>();
+
+		String sql = "SELECT * FROM acc_holder_details";
+		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+			while (resultSet.next()) {
+				AccountHolderDetails accountHolder = new AccountHolderDetails();
+				accountHolder.setAccNo(resultSet.getInt("acc_no"));
+				accountHolder.setName(resultSet.getString("name"));
+				accountHolder.setEmail(resultSet.getString("email"));
+				accountHolder.setBirthdate(resultSet.getString("birthdate"));
+				accountHolder.setBalance(resultSet.getDouble("balance"));
+				accountHolder.setAccTypeId(resultSet.getInt("acctype_id"));
+				accountHolders.add(accountHolder);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return accountHolders;
+	}
+
+	public void editAccountHolder(int accNo, String newName, String newBirthdate) {
+
+		String sql = "UPDATE acc_holder_details SET name = ?, birthdate = ? WHERE acc_no = ?";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			preparedStatement.setString(1, newName);
+			preparedStatement.setString(2, newBirthdate);
+			preparedStatement.setInt(3, accNo);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<AccountHolderDetails> getAccountHoldersByType(int accTypeId) {
+		List<AccountHolderDetails> accountHolders = new ArrayList<>();
+
+		String sql = "SELECT * FROM acc_holder_details WHERE acctype_id = ?";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			preparedStatement.setInt(1, accTypeId);
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				while (resultSet.next()) {
+					AccountHolderDetails accountHolder = new AccountHolderDetails();
+					accountHolder.setAccNo(resultSet.getInt("acc_no"));
+					accountHolder.setName(resultSet.getString("name"));
+					accountHolder.setEmail(resultSet.getString("email"));
+					accountHolder.setBirthdate(resultSet.getString("birthdate"));
+					accountHolder.setBalance(resultSet.getDouble("balance"));
+					accountHolder.setAccTypeId(resultSet.getInt("acctype_id"));
+					accountHolders.add(accountHolder);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return accountHolders;
+	}
+
+	public void deleteAccountHolder(int accNo) {
+
+		String sql = "DELETE FROM acc_holder_details WHERE acc_no = ?";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			preparedStatement.setInt(1, accNo);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void displayAccountTypeWiseCount() {
+
+		String sql = "SELECT type, COUNT(*) AS count FROM acc_holder_details "
+				+ "JOIN acc_type ON acc_holder_details.acctype_id = acc_type.id " + "GROUP BY type";
+		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+			while (resultSet.next()) {
+				String accountType = resultSet.getString("type");
+				int count = resultSet.getInt("count");
+				System.out.println(accountType + ": " + count);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sortAccountHoldersByBalance() {
+
+		String sql = "SELECT * FROM acc_holder_details ORDER BY balance";
+		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+			List<AccountHolderDetails> sortedAccountHolders = new ArrayList<>();
+			while (resultSet.next()) {
+				AccountHolderDetails accountHolder = new AccountHolderDetails();
+				accountHolder.setAccNo(resultSet.getInt("acc_no"));
+				accountHolder.setName(resultSet.getString("name"));
+				accountHolder.setEmail(resultSet.getString("email"));
+				accountHolder.setBirthdate(resultSet.getString("birthdate"));
+				accountHolder.setBalance(resultSet.getDouble("balance"));
+				accountHolder.setAccTypeId(resultSet.getInt("acctype_id"));
+				sortedAccountHolders.add(accountHolder);
+			}
+			// Sort account holders by balance in descending order
+			sortedAccountHolders.sort(Comparator.comparingDouble(AccountHolderDetails::getBalance).reversed());
+			// Print sorted account holders
+			sortedAccountHolders.forEach(System.out::println);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
+

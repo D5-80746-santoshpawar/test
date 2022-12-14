@@ -1,0 +1,25 @@
+class DoublyLinearLinkedlist{
+	String name;
+	class Node {
+		
+		int previous;
+		int next;
+	}
+	
+	int head;
+	
+	
+	public void AddLast() {
+		
+	}
+	
+	public void DeleteLast() {
+		
+	}
+	
+	
+	public void DisplayAll(){
+		
+	}
+	
+}

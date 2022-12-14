@@ -1,0 +1,24 @@
+D5-80746-santoshpawar>_CREATE DATABASE Hackthon1;
+D5-80746-santoshpawar>_use Hackthon1;
+D5-80746-santoshpawar>_create table users(id int PRIMARY KEY auto_increment,FirstName varchar(255),LastName varchar(255)
+,email varchar(255),password varchar(255),mobile varchar(255),birth DATE,UNIQUE (email));
+D5-80746-santoshpawar>_create table reviews(id int PRIMARY KEY auto_increment,movie_id int,review varchar(255),rating int,user_id int,modified TIMESTAMP,FOREIGN KEY (user_id) REFERENCES users(user_id) );
+
+D5-80746-santoshpawar>_create table reviews(id int PRIMARY KEY,movie_id int,review varchar(255),rating int,user_id int,modified TIMESTAMP,FOREIGN KEY (user_id) REFERENCES users(id) );
+
+
+D5-80746-santoshpawar>_create table movies(id int PRIMARY KEY,title varchar(255),r_date DATE );
+
+D5-80746-santoshpawar>_insert into movies values (1,"Avatar",'2009-02-21'),(2,"Titanic",'1997-08-09'),(3,"Frozen",'2013-07-24'),(4,"The Lords of Rings",'2003-03-12'),(5,"Skyfall",'2012-12-26'),(6,"Toy Story",'2010-07-19'),(7,"Jurassic Park",'1993-06-16'),(8,"Alice in Wonderland",'2010-03-04'),(9,"zootopia",'2016-04-11'),(10,"The Dark Knights",'2008-12-16');
+
+
+
+input validiation review,email,pass not empty
+input validiation review,multi word input
+edit your own review
+you can share your own review
+when review is deleted,it should also be deleted from shared review
+date time fields are handeled properly
+
+
+

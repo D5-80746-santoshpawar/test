@@ -1,0 +1,54 @@
+package com.moviereview;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Date;
+
+
+public class UsersDao extends Dao{
+	
+	protected UsersDao() throws Exception {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Users findByEmail(String email) throws Exception {
+		String sql = "SELECT * FROM users WHERE email=?";
+		try(PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, email);
+			try(ResultSet rs = stmt.executeQuery()) {
+				while(rs.next()) {
+					int id = rs.getInt("user_id");
+					String fname = rs.getString("first_name");
+					String lname = rs.getString("last_name");
+					 email = rs.getString("email");
+					String password = rs.getString("password");
+					String mobile = rs.getString("email");
+					Date uDate = DateUtil.sqlToUtilDate(rs.getDate("birth"));
+					return new Users(id, fname, lname, email, password, mobile, uDate);
+				}
+			} // rs.close();
+		} // stmt.close();
+		return null;
+	}
+	
+	
+	public int save(Users u) throws Exception {
+		String sql = "INSERT INTO users VALUES(default, ?, ?, ?, ?, ?, ?, ?)";
+		try(PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, u.getFirst_name());
+			stmt.setString(2, u.getLast_name());
+			stmt.setString(3, u.getEmail());
+			stmt.setString(4, u.getPassword());
+			stmt.setString(5, u.getMobile());
+			stmt.setDate(6, DateUtil.utilToSqlDate(u.getBirth()));
+			int count = stmt.executeUpdate();
+			return count;
+		} //stmt.close();
+	}
+		
+		
+	
+}
+	
+

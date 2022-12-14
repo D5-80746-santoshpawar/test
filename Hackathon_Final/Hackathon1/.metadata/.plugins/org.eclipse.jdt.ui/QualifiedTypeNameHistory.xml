@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="com.moviereview.Dao"/>
+    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
+    <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="org.w3c.dom.UserDataHandler"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="java.lang.Exception"/>
+    <fullyQualifiedTypeName name="java.security.Timestamp"/>
+    <fullyQualifiedTypeName name="com.moviereview.UsersDao"/>
+    <fullyQualifiedTypeName name="com.moviereview.MoviesDao"/>
+    <fullyQualifiedTypeName name="com.moviereview.ReviewsDao"/>
+    <fullyQualifiedTypeName name="com.moviereview.DateUtil"/>
+    <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+    <fullyQualifiedTypeName name="java.sql.Timestamp"/>
+    <fullyQualifiedTypeName name="com.moviereview.Users"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="com.moviereview.Reviews"/>
+    <fullyQualifiedTypeName name="com.moviereview.SharesDao"/>
+    <fullyQualifiedTypeName name="com.moviereview.Shares"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,13 @@
+import java.util.Date;
+
+public class Account {
+	int acc_no;
+	String name;
+	String email;
+	Date birthdate;
+	Double balance;
+	int acctype_id;
+	
+	
+
+}

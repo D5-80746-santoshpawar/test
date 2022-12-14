@@ -1,0 +1,8 @@
+cat
+Bat
+Goat
+Apple
+Dog
+First
+Eat
+Hide

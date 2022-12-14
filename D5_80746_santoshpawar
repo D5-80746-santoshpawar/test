@@ -1,0 +1,383 @@
+
+mysql> create database exam_db;
+
+create table customers(
+cid int primary key,
+cname varchar(25),
+city varchar(25)
+);
+
+insert into customers(cid,cname,city) values
+(101,'John','Mumbai'),
+(102,'Mac','Pune'),
+(103,'Donald','Mumbai'),
+(104,'Smith','Karad'),
+(105,'Ayesh','Pune'),
+(106,'Ileana','Mumbai'),
+(107,'Adam','Karad'),
+(108,'Millar','Karad'),
+(109,'Peter','Pune'),
+(119,'Merry','Karad');
+
+create table products(
+pid int primary key,
+pname varchar(20),
+prate int
+);
+
+insert into products values
+(1,'Pen',20),(2,'Pencil',10),(3,'File',40),(4,'Notebook',60),(5,'SketchPen',25),(6,'Marker',30);
+
+create table orders(
+oid int primary key,
+odate date,
+ostatus varchar(10),
+oamount double(7,2), 
+cid int references customers(cid)
+);
+
+insert into orders values
+(1,'2021-10-02','dispachted',150.00,101),(2,'2021-10-02','dispachted',50.00,102),(3,'2021-10-03','dispachted',450.00,104),(4,'2021-10-03','delivered',450.00,119),(5,'2021-10-02','delivered',100.00,105),(6,'2021-10-05','delivered',150.00,108),(7,'2021-10-02','delivered',350.00,108);
+
+create table order_items(
+oid int references orders(oid),
+pid int references products(pid),
+pqty int
+);
+
+insert into order_items values
+(1,1,5),(1,2,5),(2,5,2),(3,4,5),(3,1,5),(3,5,2),(4,6,10),(4,4,2),(4,1,1),(4,2,1),(5,5,4),(6,6,5),(7,4,5),(7,5,2);
+
+_______________________________________________________________________________________________________
+1. 
+select count(*) as No_of_Customers,City from customers group by City;
+
+>_select count(*) as No_of_Customers,City from customers group by City;
++-----------------+--------+
+| No_of_Customers | City   |
++-----------------+--------+
+|               3 | Mumbai |
+|               3 | Pune   |
+|               4 | Karad  |
++-----------------+--------+
+3 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+2. Find number of pending and number of delivered orders whose total amount is more than 100.
+
+select count(oid) as no_of_delivered,(select count(oid) from orders where oamount>100 and ostatus = 'dispachted' group by ostatus) as no_of_pending from orders where oamount>100 and ostatus = 'delivered' group by ostatus;
+
+>_select count(oid) as no_of_delivered,(select count(oid) from orders where oamount>100 and ostatus = 'dispachted' group by ostatus) as no_of_pending from orders where oamount>100 and ostatus = 'delivered' group by ostatus;
++-----------------+---------------+
+| no_of_delivered | no_of_pending |
++-----------------+---------------+
+|               5 |             1 |
++-----------------+---------------+
+1 row in set (0.00 sec)
+_______________________________________________________________________________________________________
+3. Display top 3 products that produce highest revenue (quantity * rate).
+
+select order_items.pid,sum(pqty)*prate as Revenue from order_items,products where 
+products.pid = order_items.pid group by order_items.pid order by Revenue limit 3;
+
+>_select order_items.pid,sum(pqty)*prate as Revenue from order_items,products where 
+    -> products.pid = order_items.pid group by order_items.pid order by Revenue limit 3;
++------+---------+
+| pid  | Revenue |
++------+---------+
+|    2 |      60 |
+|    1 |     220 |
+|    5 |     250 |
++------+---------+
+3 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+4. Find total number of orders by customer John, Mac and Donald.
+
+
+select orders.cid,count(*) as No_of_orders from orders
+where cid in (
+select cid from customers where cname in ('John','Mac','Donald')) group by orders.cid;
+
+>_select orders.cid,count(*) as No_of_orders from orders
+    -> where cid in (
+    -> select cid from customers where cname in ('John','Mac','Donald')) group by orders.cid;
++------+--------------+
+| cid  | No_of_orders |
++------+--------------+
+|  101 |            1 |
+|  102 |            1 |
++------+--------------+
+2 rows in set (0.01 sec)
+_______________________________________________________________________________________________________
+5. Mark last order of John as Delivered.(3 Marks)
+
+update orders set ostatus = 'delivered' where cid = 
+(select cid from customers where cname = 'John') order by odate desc limit 1;
+
+>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | dispachted |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | delivered  |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+
+>_update orders set ostatus = 'delivered' where cid = 
+    -> (select cid from customers where cname = 'John') order by odate desc limit 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | delivered  |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | delivered  |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+6. Display cities of all customers whose name start and end with a vowel (a, e, i, o, u)
+
+select city from customers where (cname like 'A%' or cname like 'E%' or cname like 'I%' or cname like 'O%' or cname like 'U%') and (cname like '%a' or cname like '%e' or cname like '%i' or cname like '%o' or cname like '%u');
+
+>_select city from customers where (cname like 'A%' or cname like 'E%' or cname like 'I%' or cname like 'O%' or cname like 'U%') and (cname like '%a' or cname like '%e' or cname like '%i' or cname like '%o' or cname like '%u');
++--------+
+| city   |
++--------+
+| Mumbai |
++--------+
+1 row in set (0.01 sec)
+_______________________________________________________________________________________________________
+7. Display cities, number of orders and total amount of orders from cities in asc order of city name.
+
+select city, sum(oamount) as total_amount_of_orders, count(oid) as no_of_orders from orders,customers where customers.cid=orders.cid group by city order by city;
+
+>_select city, sum(oamount) as total_amount_of_orders, count(oid) as no_of_orders from orders,customers where customers.cid=orders.cid group by city order by city;
++--------+------------------------+--------------+
+| city   | total_amount_of_orders | no_of_orders |
++--------+------------------------+--------------+
+| Karad  |                1590.00 |            5 |
+| Mumbai |                 150.00 |            1 |
+| Pune   |                 150.00 |            2 |
++--------+------------------------+--------------+
+3 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+8. find customer with second highest order amount.(3 Marks)
+
+select cid,sum(oamount) as Second_highest_amount from orders group by cid having sum(oamount) = 
+(select distinct sum(oamount) as Order_amount from orders group by cid order by Order_amount desc limit 1 offset 1);
+
+>_select cid,sum(oamount) as Second_highest_amount from orders group by cid having sum(oamount) = 
+    -> (select distinct sum(oamount) as Order_amount from orders group by cid order by Order_amount desc limit 1 offset 1);
++------+-----------------------+
+| cid  | Second_highest_amount |
++------+-----------------------+
+|  104 |                450.00 |
+|  119 |                450.00 |
++------+-----------------------+
+2 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+9. Today Adam is ordering 3 pencils, 1 file and 2 notebooks. Insert corresponding records in the tables. 
+
+   Order amount should be calculated using query.
+
+insert into order_items values
+(8,2,3),
+(8,3,1),
+(8,4,2);
+
+select sum(prate*pqty) from order_items,products where products.pid = order_items.pid and oid = 8;
+
+>_select sum(prate*pqty) from order_items,products where products.pid = order_items.pid and oid = 8;
++-----------------+
+| sum(prate*pqty) |
++-----------------+
+|             190 |
++-----------------+
+1 row in set (0.00 sec)
+
+insert into orders values
+(8,sysdate(),'Pending',190.00,107);
+
+>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | dispachted |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | Pending    |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+10. Update the last order of Adam from Pending to Processing and then Paid to Delivered (in two different queries).
+
+update orders set ostatus = 'Processing' where cid = 
+(select cid from customers where cname = 'Adam') order by odate desc limit 1;
+
+h>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | dispachted |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | Processing |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+
+update orders set ostatus = 'Paid' where cid = 
+(select cid from customers where cname = 'Adam') order by odate desc limit 1;
+
+>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | dispachted |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | Paid       |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+
+update orders set ostatus = 'delivered' where cid = 
+(select cid from customers where cname = 'Adam') order by odate desc limit 1;
+
+>_update orders set ostatus = 'delivered' where cid = 
+    -> (select cid from customers where cname = 'Adam') order by odate desc limit 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+>_select * from orders;
++-----+------------+------------+---------+------+
+| oid | odate      | ostatus    | oamount | cid  |
++-----+------------+------------+---------+------+
+|   1 | 2021-10-02 | dispachted |  150.00 |  101 |
+|   2 | 2021-10-02 | dispachted |   50.00 |  102 |
+|   3 | 2021-10-03 | dispachted |  450.00 |  104 |
+|   4 | 2021-10-03 | delivered  |  450.00 |  119 |
+|   5 | 2021-10-02 | delivered  |  100.00 |  105 |
+|   6 | 2021-10-05 | delivered  |  150.00 |  108 |
+|   7 | 2021-10-02 | delivered  |  350.00 |  108 |
+|   8 | 2023-10-03 | delivered  |  190.00 |  107 |
++-----+------------+------------+---------+------+
+8 rows in set (0.00 sec)
+_______________________________________________________________________________________________________
+2. Write a PL/SQL stored procedure that selects name from customer table and count the number of characters and words in a string and insert resultant data into temporary table having columns 'count of characters' and 'count of words'.
+
+create table temp(
+count_of_characters int,count_of_words int
+);
+
+delimiter //
+create procedure abcd()
+begin
+    declare a varchar(25);
+    declare y int default 0;
+    declare c1 cursor for select cname from customers;
+    declare continue handler for not found set y = 1;
+    open c1;
+    cursor_c1_loop:loop
+    	fetch c1 into a;
+    	if y = 1 then
+    		leave cursor_c1_loop;
+    	end if;
+    	insert into temp values(length(a),length(a)-length(replace(a,' ',''))+1);
+    end loop cursor_c1_loop;
+    close c1;
+end; //
+delimiter ;
+
+>_delimiter //
+>_create procedure abcd()
+    -> begin
+    ->     declare a varchar(25);
+    ->     declare y int default 0;
+    ->     declare c1 cursor for select cname from customers;
+    ->     declare continue handler for not found set y = 1;
+    ->     open c1;
+    ->     cursor_c1_loop:loop
+    ->     fetch c1 into a;
+    ->     if y = 1 then
+    ->     
+Display all 766 possibilities? (y or n) 
+    ->     leave cursor_c1_loop;
+    ->     end if;
+    ->     insert into temp values(length(a),length(a)-length(replace(a,' ',''))+1);
+    ->     end loop cursor_c1_loop;
+    ->     close c1;
+    -> end; //
+Query OK, 0 rows affected (0.00 sec)
+
+>_delimiter ;
+>_call abcd;
+Query OK, 0 rows affected (0.02 sec)
+
+>_select * from temp;
++---------------------+----------------+
+| count_of_characters | count_of_words |
++---------------------+----------------+
+|                   4 |              1 |
+|                   3 |              1 |
+|                   6 |              1 |
+|                   5 |              1 |
+|                   5 |              1 |
+|                   6 |              1 |
+|                   4 |              1 |
+|                   6 |              1 |
+|                   5 |              1 |
+|                   5 |              1 |
++---------------------+----------------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

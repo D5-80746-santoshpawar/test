@@ -1,0 +1,17 @@
+"Linux is open source.
+In linux everything is a file.
+Linux Is very poweful.
+Security is the main
+advantage."
+
+cat > data.txt
+"Linux is open source.
+In linux everything is a file.
+Linux Is very poweful.
+Security is the main
+advantage."
+
+grep -o -i 'is' data.txt | wc -l
+
+wc -w data.txt
+

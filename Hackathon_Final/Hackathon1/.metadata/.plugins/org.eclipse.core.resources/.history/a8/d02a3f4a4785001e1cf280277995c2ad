@@ -1,0 +1,321 @@
+package com.moviereview;
+
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;import org.w3c.dom.UserDataHandler;
+
+public class Main {
+
+	public static Scanner sc ;
+	
+	public static void userOperations() {
+		int choice;
+		Users curUser= null;
+		
+		do {
+			System.out.print("0.Exit \n1. Sign Up\n2. Sign In\nEnter choice: ");
+			choice = sc.nextInt();
+			switch (choice) {
+			case 0://Exit
+				System.out.println("Thanks For Visiting , Bye!!!");
+				break;
+			
+			case 1:
+				signUp();
+				break;
+			case 2:
+				curUser= signIn();
+				operations(curUser);
+				
+				break;
+			
+				}
+			}
+		while(choice !=0);
+		
+	}
+	
+	public static void signUp() {
+		System.out.print("First Name");
+		String fname=sc.next();
+		System.out.print("\nLast Name");
+		String lname= sc.next();
+		System.out.print("\nEmail-");
+		String email= sc.next();
+		System.out.print("\nPassword -");
+		String pass= sc.next();
+		System.out.print("\nMobile -");
+		String mobile= sc.next();
+		System.out.print("\nDate (dd-MM-yyyy)- ");
+		String  dateStr= sc.next();
+		Users user = new Users(0, fname, lname, email, pass,mobile,DateUtil.parse(dateStr));
+		try(UsersDao dao = new UsersDao()) {
+			int count = dao.save(user);
+			System.out.println("User registered: " + count);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+	}
+	
+	public static Users signIn() {
+		String email;
+		String pass;
+		System.out.print("Enter Email - ");
+		email=sc.next();
+		System.out.print("Enter Password - ");
+		pass=sc.next();
+		
+		try(UsersDao dao = new UsersDao()){
+			Users user = dao.findByEmail(email);
+			if(user!=null && pass.equals(user.getPassword()))
+				return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	public static void operations(Users u) {
+		int choice=0;
+		do {
+		System.out.println("0.Exit  \n1.Edit Profile \n2. Change Password \n3. Write a Review "
+				+ "\n4.Edit Review \n5. Display all Movies \n6.Display all Reviews \n7.Display my Reviews"
+				+ "\n8.Display Reviews Shared with me "
+				+ "\n9.Share a Review  \n10.Delete a Review ");
+		System.out.println("Enter Correct Choice");
+		choice=sc.nextInt();
+		switch(choice) {
+		case 0:
+			break;
+		case 1:
+			edit(u);
+			break;
+		case 2:
+			changePass(u);
+			break;
+		case 3:
+			writeMainReview(u);
+			break;
+		case 4:
+			editMainReview(u);
+			break;
+		case 5:
+			displayMovies();
+			break;
+		case 6:
+			displayReviews();
+			break;
+		case 7:
+			displayMainMyReviews(u);
+			break;
+		case 8:
+			displayMainReviewsSharedWithME(u);
+			break;
+		case 9:
+			shareMainReview(u);
+			break;
+		case 10:
+			deleteMainReview(u);
+			break;
+		}
+		}
+		while(choice!=0);
+		
+
+	}
+	
+	
+
+	public static void edit(Users u) {
+		
+		int usersId= u.getUser_id();
+		
+		try(UsersDao dao = new UsersDao()){
+			System.out.print("First Name");
+			String fname=sc.next();
+			System.out.print("\nLast Name");
+			String lname= sc.next();
+			System.out.print("\nEmail-");
+			String email= sc.next();
+			System.out.println("\nPassword -");
+			String pass= sc.next();
+			System.out.println("\nMobile -");
+			String mobile= sc.next();
+			System.out.println("\nDate (dd-MM-yyyy)- ");
+			
+			String  dateStr= sc.next();
+			Date udate= DateUtil.parse(dateStr);
+			int count =dao.editProfile(usersId,fname,lname,email,pass,mobile,DateUtil.utilToSqlDate(udate));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void changePass(Users u) {
+		int usersId= u.getUser_id();
+		try(UsersDao dao = new UsersDao()){
+			System.out.println("Enter new password");
+			String pass= sc.next();
+			int count=dao.changePassword(usersId,pass);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+			
+	}
+	
+	public static void writeMainReview(Users u) {
+		//diplay movielist 
+		try(MoviesDao dao = new MoviesDao()){
+			System.out.println(dao.displayAllMovies().toString());
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		//write 
+		try(ReviewsDao dao =new ReviewsDao()){
+			System.out.print("Enter Movie Id - ");
+			int movieId=sc.nextInt();
+			sc.nextLine();
+			System.out.print("\nEnter Review");
+			String review=sc.nextLine();
+			System.out.print("Enter Movie Rating");
+			int rating=sc.nextInt();
+			
+			Reviews r= new Reviews(1,movieId,review,rating,u.getUser_id(),null);
+			
+			int count= dao.writeReview(r);
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static java.sql.Timestamp Timestamp(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static void editMainReview(Users u) {
+		//diplay reviews 
+		try(ReviewsDao dao = new ReviewsDao()){
+			System.out.println(dao.displayAllReviews().toString());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		//edit
+		
+		try(ReviewsDao dao = new ReviewsDao()){
+			System.out.println("Enter review id to be edited");
+			int reviewId=sc.nextInt();
+			//diplay
+			int uId=u.getUser_id();
+			System.out.println("Enter new Rating");
+			int rating=sc.nextInt();
+			System.out.println("Enter new review");
+			String rev=sc.next();
+			int count= dao.editReview(uId,rating,rev);
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void displayMovies() {
+		try(MoviesDao dao = new MoviesDao()){
+			System.out.println(dao.displayAllMovies().toString());
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void displayReviews() {
+		try(ReviewsDao dao = new ReviewsDao()){
+		System.out.println(dao.displayAllReviews().toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void displayMainMyReviews(Users u) {
+		try(ReviewsDao dao = new ReviewsDao()){
+		System.out.println(dao.displayMyReviews(u.getUser_id()));
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public static void displayMainReviewsSharedWithME(Users u) {
+		// TODO Auto-generated method stub
+		try(SharesDao dao = new SharesDao()){
+			System.out.println(dao.displayReviewsSharedWithMe(u.getUser_id()));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		
+	}
+	public static void shareMainReview(Users u){
+		try(ReviewsDao dao = new ReviewsDao()){
+			System.out.println(dao.displayMyReviews(u.getUser_id()));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		
+			
+		try(SharesDao dao = new SharesDao()){
+			
+			System.out.println("Enter Review id to be shared");
+			int revid= sc.nextInt();
+			int ip=sc.nextInt();
+			System.out.println("Enter User id to be shared");
+			
+			while(ip!=0) {
+				
+				dao.shareReview(revid,ip);
+				ip=sc.nextInt();
+			}
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	}
+	
+	public static void deleteMainReview(Users u) {
+		try(ReviewsDao dao = new ReviewsDao()){
+		System.out.println("Enter review id to be deleted");
+		int idtodelete =sc.nextInt();
+		System.out.println(dao.deleteReview(idtodelete));
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+		}
+
+	public static void main(String[] args) {
+		sc= new Scanner(System.in);
+		userOperations();
+		sc.close();
+	}
+}

@@ -1,0 +1,68 @@
+import com.sunbeam.DoublyLinkedListPerson.Node;
+
+
+
+	
+	
+	 public class  DoublyLinearLinkedlist {
+    static class Node {
+        String name;
+        Node next;
+        Node prev;
+
+        public Node(String name) {
+            this.name = name;
+            this.next = null;
+            this.prev = null;
+        }
+    }
+
+    private Node head;
+
+    public DoublyLinearLinkedlist {
+        this.head = null;
+    }
+    
+	
+	public void AddLast() {
+		
+	}
+	
+	// Delete node from first position
+	public void DeleteLast() {
+		
+	}
+	
+	// display all nodes in forward direction
+	public void DisplayAll(){
+		
+	}
+	
+	//display alternate nodes starting from first node
+	public void DisplayAlternate() {
+		
+	}
+	
+	// delete mth node from nth node if available
+	
+	public void DeletePosition() {
+		
+	}
+	
+	//swap all pairs starting from first node
+	public void SwapPairs() {
+		
+	}
+	
+	// find max sum of any two name length
+	
+	
+	public void MaxSum() {
+		
+	}
+	
+	
+	publis staitc void main (String[] args) {
+		
+	}
+}

@@ -1,0 +1,10 @@
+cat sample.txt
+Bat
+Goat
+Apple
+Dog
+First
+Eat
+Hide
+
+grep -v 'a' sample.txt | tac

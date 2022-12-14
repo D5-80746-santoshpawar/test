@@ -1,0 +1,12 @@
+package com.moviereview;
+
+public class UsersDao extends Dao{
+
+	protected UsersDao() throws Exception {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+}

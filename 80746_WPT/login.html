@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+
+<body> <center>
+    <div class="container"  style="background-color: aqua; width: 300px; border-image: auto; " >
+        <h1>Login</h1>
+        <div class="login-form">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+            <p id="emailError" class="error"></p>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password">
+            <p id="passwordError" class="error"></p>
+
+            <button id="loginButton">Login</button>
+        </div>
+    </div>
+
+    <script style="background-color: beige;">
+        document.getElementById("loginButton").addEventListener("click", function () {
+            // Reset error messages
+            document.getElementById("emailError").textContent = "";
+            document.getElementById("passwordError").textContent = "";
+
+            // Get values from input fields
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // Regular expressions for email and password validation
+    //         1.Email must contain Uppercase and Lowercase letters(A-Z and a-z)
+
+    // 1.1 numeric characters(0-9)
+
+    // 1.2 special characters( - ! # $ % & * + _ / = ? { | } ~ )
+           // var emailPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]+$/;
+            var emailPattern = /^(?=.*[A-Z]*[a-z]*[!@#$%^&*()_+])/ 
+            
+            var passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/;
+
+            // Validate email
+            if (!emailPattern.test(email)) {
+                document.getElementById("emailError").textContent = "Invalid email format.";
+                return; // Exit function if validation fails
+            }
+
+            // Validate password
+            if (!passwordPattern.test(password)) {
+                document.getElementById("passwordError").textContent = "Invalid password format.";
+                return; // Exit function if validation fails
+            }
+
+            // If both email and password validations pass, redirect to "calc.html"
+            window.location.href = "calculator.html";
+        });
+    </script>
+    <style>
+        
+    </style>
+    </center>
+</body>
+
+</html>

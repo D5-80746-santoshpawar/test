@@ -1,0 +1,8 @@
+package com.moviereview;
+
+public class Shares {
+	
+	int review_id;
+	int user_id;
+	
+}

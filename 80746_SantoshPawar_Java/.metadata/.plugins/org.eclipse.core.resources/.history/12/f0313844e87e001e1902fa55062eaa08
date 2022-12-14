@@ -1,0 +1,125 @@
+
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+	public static Account acceptAccount(Scanner sc) {
+		System.out.print("Enter Account Number: ");
+		int id = sc.nextInt();
+		System.out.print("Enter Name: ");
+		String name = sc.next();
+		System.out.print("Enter email: ");
+		String email = sc.next();
+		System.out.print("Enter birthdate: ");
+		String birthdate = sc.next();
+		System.out.print("Enter Balance: ");
+		Double balance = sc.nextDouble();
+		System.out.print("Enter Account_type: ");
+		int acctype_id = sc.nextInt();
+		Account c = new Account(id, name, email, birthdate, balance, acctype_id);
+	}
+
+	public static void main(String[] args) {
+		// TODO: Menu driven program
+
+		Scanner sc = new Scanner(System.in);
+
+		int choice;
+
+		while (true) {
+			System.out.println("0. EXIT");
+			System.out.println("1. add new Account Holder ");
+			System.out.println("2. display all Account Holder Details ");
+			System.out.println("3. edit name and birthdate");
+			System.out.println("4. display Account Holder Details for given account type");
+			System.out.println("5.  delete Account Holder Details for given account number. ");
+			System.out.println("5. display account type wise total number of Account Holders");
+			System.out.println("6. Sort by Account balance.");
+
+			System.out.println("===================================================");
+			System.out.print("Enter your choice : ");
+			choice = sc.nextInt();
+
+			switch (choice) {
+
+			case 1:
+				try (AccountDao dao = new AccountDao()) {
+					Account c = acceptAccount(sc);
+					int count = dao.updates(c);
+					System.out.println("Rows Updated: " + count);
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+/*
+			case 2:
+				try (AccountDao dao = new AccountDao()) {
+					System.out.print("Enter party: ");
+					String party = sc.next();
+					List<Account> list = dao.findByParty(party);
+					list.forEach(c -> System.out.println(c));
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			case 3:
+
+				try (AccountDao dao = new AccountDao()) {
+					Account c = acceptAccount(sc);
+					int rowsChanged = dao.save(c);
+					int list = dao.save(c);
+					System.out.println("Account list: " + c);
+					// int list.forEach(c -> System.out.println(c));
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case 4:
+				try (AccountDao dao = new AccountDao()) {
+					System.out.print("Enter id: ");
+					int id = sc.nextInt();
+					int list = dao.deleteById(id);
+					// list.forEach(c -> System.out.println(c));
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+
+			case 5:
+				try (AccountDao dao = new AccountDao()) {
+					System.out.print("Enter id: ");
+					int id = sc.nextInt();
+					Account list = dao.findById(id);
+					// list.forEach(c -> System.out.println(c));
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case 6:
+				try (AccountDao dao = new AccountDao()) {
+
+					Account list = dao.findAll();
+					// list.forEach(c -> System.out.println(c));
+				} // dao.close();
+				catch (Exception e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+		}
+
+	} 
+	*/
+}
+		}
+	}

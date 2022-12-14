@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="style.css">
+    <!-- <script type="text/javascript" src="app.js"></script> -->
+    <!-- <img src="restaurant-background.jpg" alt=""> -->
+   <div style="background-color: blue;">
+    <h1>Welcome User</h1>
+    <button  id="logout" onclick="logout()">Logout</button>
+   </div> 
+</head>
+
+<body> 
+    <!-- <img src="restaurant-background.jpg" alt=""> -->
+    <center>
+   
+    <div  class="container"   style="background-color: aqua; width: 300px; border-image: auto; "  >
+       
+        <h1 >TIP CALCULATOR</h1>
+        <div class="wrapper">
+            <p>Bill Amount</p>
+            <input type="text" id="amount" placeholder="Amount to be paid"> ₹
+            <p id="amountError" class="error"></p> <!-- Error message for bill amount -->
+            
+            <p>How was the service?</p>
+            <select id="services">
+                <option selected disabled hidden>Select</option>
+                <option value="0.30">30% - Out standing</option>
+                <option value="0.20">20% - Good</option>
+                <option value="0.15">15% - It was Okay</option>
+                <option value="0.10">10% - Bad</option>
+                
+            </select>
+            <p id="servicesError" class="error"></p> <!-- Error message for service option -->
+            
+            <p>Total number of persons</p>
+            <input type="text" id="persons" placeholder="Number of people sharing the bill">
+            <p id="personsError" class="error"></p> <!-- Error message for sharing bill amount -->
+            
+            <button id="calculate" onclick="calculateTip()">Calculate</button>
+            
+        </div>
+
+        <div class="tip"  >
+            <p>Tip Amount</p>
+            <span id="total">0</span>₹
+            <span id="each">each</span>
+        </div>
+    </div>
+
+      <script style="background-color: blueviolet" >
+        function calculateTip() {
+            // Reset error messages
+            document.getElementById("amountError").textContent = "";
+            document.getElementById("servicesError").textContent = "";
+            document.getElementById("personsError").textContent = "";
+
+            // Get values from input fields
+            var billAmount = document.getElementById("amount").value;
+            var serviceOption = document.getElementById("services").value;
+            var numberOfPersons = document.getElementById("persons").value;
+
+            // Validate bill amount
+            if (billAmount === "") {
+                document.getElementById("amountError").textContent = "Bill amount is required.";
+                return; // Exit function if validation fails
+            }
+
+            // Validate service option
+            if (serviceOption === "Select") {
+                document.getElementById("servicesError").textContent = "Service option is required.";
+                return; // Exit function if validation fails
+            }
+
+            // Validate sharing bill amount
+            if (numberOfPersons === "") {
+                document.getElementById("personsError").textContent = "Number of persons is required.";
+                return; // Exit function if validation fails
+            }
+
+            // If all validations pass, calculate and display the tip
+            var tipAmount = (parseFloat(billAmount) * parseFloat(serviceOption)) / parseFloat(numberOfPersons);
+            document.getElementById("total").textContent = tipAmount.toFixed(2);
+        }
+        
+        function logout(){
+            window.location.href = "login.html";
+        }
+    
+    </script>
+    </center>
+</body>
+
+</html>
+

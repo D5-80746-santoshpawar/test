@@ -1,0 +1,31 @@
+package com.moviereview;
+
+import java.security.Timestamp;
+
+public class Reviews {
+	
+	int id;
+	int movie_id;
+	String review;
+	int rating;
+	int user_id;
+	Timestamp modified;
+	
+	public Reviews() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Reviews(int id, int movie_id, String review, int rating, int user_id, Timestamp modified) {
+		super();
+		this.id = id;
+		this.movie_id = movie_id;
+		this.review = review;
+		this.rating = rating;
+		this.user_id = user_id;
+		this.modified = modified;
+	}
+	
+	
+	
+	
+}

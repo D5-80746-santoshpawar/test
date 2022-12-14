@@ -1,0 +1,221 @@
+
+import java.util.Scanner;
+
+import com.sunbeam.*;
+import com.sunbeam.DoublyLinkedListPerson.Node;
+
+
+
+
+	
+	
+ public class  DoublyLinearLinkedlist {
+    static class Node {
+        String name;
+        Node next;
+        Node prev;
+
+        public Node(String name) {
+            this.name = name;
+            this.next = null;
+            this.prev = null;
+        }
+    
+
+    public Node head ;
+
+    public  void DoublyLinearLinkedlist() {
+    	this.head=null;
+    }
+ 
+    
+    
+	
+	public Node(String name, Node next, Node prev, Node head) {
+		super();
+		this.name = name;
+		this.next = next;
+		this.prev = prev;
+		this.head = head;
+	}
+
+
+
+
+
+	public void addLast() {
+		  Node newNode = new Node(name);
+	        if (head == null) {
+	            head = newNode;
+	        } else {
+	            Node temp = head;
+	            while (temp.next != null) {
+	                temp = temp.next;
+	            }
+	            temp.next = newNode;
+	            newNode.prev = temp;
+	        }
+	        System.out.println("Node with name '" + name + "' added at the last position.");
+	}
+		
+	
+	
+	// Delete node from first position
+	public void DeleteLast() {
+		  if (head == null) {
+	            System.out.println("List is empty. Cannot delete from an empty list.");
+	            return;
+	        }
+
+	        Node temp = head;
+	        head = head.next;
+
+	        if (head != null) {
+	            head.prev = null;
+	        }
+
+	        System.out.println("Node with name '" + temp.name + "' deleted from the first position.");
+	    
+		
+	}
+	
+	// display all nodes in forward direction
+	public void DisplayAll(){
+
+        if (head == null) {
+            System.out.println("List is empty.");
+            return;
+        }
+
+        System.out.println("Nodes in forward direction:");
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.name + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    
+	}
+	
+	//display alternate nodes starting from first node
+	public void DisplayAlternate() {
+
+        if (head == null) {
+            System.out.println("List is empty.");
+            return;
+        }
+
+        System.out.println("Alternate nodes starting from the first node:");
+        Node temp = head;
+        int count = 1;
+        while (temp != null) {
+            if (count % 2 == 1) {
+                System.out.print(temp.name + " ");
+            }
+            count++;
+            temp = temp.next;
+        }
+        System.out.println();
+    
+		
+	}
+	
+	// delete mth node from nth node if available
+	
+	public void DeletePosition() {
+
+        if (head == null) {
+            System.out.println("List is empty. Cannot perform deletion.");
+            return;
+        }
+
+        Node temp = head;
+        int count = 1;
+        while (temp != null && count < n) {
+            temp = temp.next;
+            count++;
+        }
+
+        if (temp == null) {
+            System.out.println("Invalid value of n. Node not found.");
+            return;
+        }
+
+        for (int i = 0; i < m && temp != null; i++) {
+            Node nextNode = temp.next;
+            if (nextNode != null) {
+                temp.next = nextNode.next;
+                if (nextNode.next != null) {
+                    nextNode.next.prev = temp;
+                }
+                System.out.println("Node with name '" + nextNode.name + "' deleted.");
+            }
+        }
+    
+		
+	}
+	
+	//swap all pairs starting from first node
+	public void SwapPairs() {
+		
+	}
+	
+	// find max sum of any two name length
+	
+	
+	public void MaxSum() {
+		
+	}
+	
+	
+	public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        DoublyLinkedListPerson personList = new DoublyLinkedListPerson();
+
+        while (true) {
+            System.out.println("\n Menu:");
+            System.out.println("1. Add node at last position");
+            System.out.println("2. Delete node from first position");
+            System.out.println("3. Display all nodes in forward direction");
+            System.out.println("4. Display alternate nodes starting from first node");
+            System.out.println("5. Delete mth node from nth node if available");
+            System.out.println("6. Swap all pairs starting from first node");
+            System.out.println("7. Find max sum of any two name lengths");
+            System.out.println("8. Exit");
+            System.out.println("*********************************************");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the name to add at last position: ");
+                    scanner.nextLine();  // Consume newline
+                    String nameToAdd = scanner.nextLine();
+                    personList.addLast(nameToAdd);
+                    break;
+                case 2:
+                    personList.deleteFirst();
+                    break;
+                case 3:
+                    personList.displayAll();
+                    break;
+                case 4:
+                    personList.displayAlternate();
+                    break;
+                case 5:
+                    System.out.print("Enter the value of n: ");
+                    int n = scanner.nextInt();
+                    System.out.print("Enter the value of m: ");
+                    int m = scanner.nextInt();
+                    personList.deleteMthFromNth(m, n);
+                    break;
+                case 6:
+                    personList.swapAllPairs();
+                    break;
+                case 7:
+                //    personList.findMaxSum();
+                default :
+                System.out.println("You have Entered Wrong choice");
+
+}

@@ -1,0 +1,216 @@
+DBT
+
+1.Create one database with name exam_db and add following tables with given sample records into the same. Write down queries by referring same database.
+
+customers:cid int,cname varchar,city varcharcid
+
+CREATE TABLE customers (
+    cid int,
+    cname varchar(255),
+    city varchar(255),
+   
+);
+
+order_items :oid int,pid int,pqty int
+
+
+
+orders: oid int,odate date ,ostatus varchar(10),oamount double(7,2),cid int 
+
+
+products:pid int,pname varchar(20),prate int 
+
+create table products(pid int,pname varchar(20),prate int );
+
+
+Q.1 Find number of customers in each city.
+select count(city) from customers;
+mysql> select count(city) from customers;
++-------------+
+| count(city) |
++-------------+
+|          10 |
++-------------+
+*****************************************************************************************************
+Q.2 Find number of pending and number of delivered orders whose total amount is more than 100.
+
+mysql> select count(ostatus) from orders where ostatus = 'delivered' ;
++----------------+
+| count(ostatus) |
++----------------+
+|              2 |
++----------------+
+
+mysql> select count(ostatus) from orders where ostatus = 'delivered' and oamount > 150;
++----------------+
+| count(ostatus) |
++----------------+
+|              1 |
++----------------+
+************************************************************************************************************
+
+Q.3 Display top 3 products that produce highest revenue (quantity * rate).
+
+mysql> select products.pname,products.prate*order_items.pqty'rate' from products,order_items order by rate desc;
++-----------+------+
+| pname     | rate |
++-----------+------+
+| Notebook  |  600 |
+| File      |  400 |
+| Notebook  |  300 
+
+**********************************************************************************************************
+Q.4 Find total number of orders by customer John, Mac and Donald.
+
+mysql> select customers.cname,orders.oid from customers,orders where customers.cid=orders.cid;
++-------+------+
+| cname | oid  |
++-------+------+
+| Mac   |    2 |
+| Smith |    3 |
+| Ayesh |    5 |
+| Merry |    4 |
++-------+------
+*************************************************************************************************************
+Q.5 Mark last order of John as Delivered.(3 Marks)
+
+mysql> select cname from customers where cid=102;
++-------+
+| cname |
++-------+
+| Mac   |
++-------+
+UPDATE orders
+SET ostatus = delivered 
+WHERE cid=102;
+
+mysql> select cid,ostatus from orders where cid = 102;
++------+-----------+
+| cid  | ostatus   |
++------+-----------+
+|  102 | delivered |
++------+-----------+
+************************************************
+
+Q.6 Display cities of all customers whose name start and end with a vowel (a, e, i, o, u).(3 Marks)
+
+select cname from customers where cname like 'A%','E%','I%','O%','U%'; 
+mysql> select cname from customers where cname like 'A%' and  '%I';
++--------+
+| cname  |
++--------+
+| Ileana |
+
+****************************************************************************
+Q.7 Display cities, number of orders and total amount of orders from cities in asc order of city name.
+
+select customers.city from customers,
+mysql> select oamount from orders;
++---------+
+| oamount |
++---------+
+|  150.00 |
+|   50.00 |
+|  450.00 |
+|  450.00 |
+|  100.00 |
++---------+
+
+mysql> select customers.cname,customers.city,orders.oamount from customers, orders where customers.cid=orders.cid order by city;
++-------+-------+---------+
+| cname | city  | oamount |
++-------+-------+---------+
+| Smith | Karad |  450.00 |
+| Merry | Karad |  450.00 |
+| Mac   | Pune  |   50.00 |
+| Ayesh | Pune  |  100.00 |
++-------+-------+---------+
+
+**********************************************************************************************
+Q.8 find customer with second highest order amount.(3 Marks)
+
+select oamount FROM orders order by oamount desc limit 3,1;
+mysql> select oamount FROM orders order by oamount desc limit 3,1;
+    -> //
++---------+
+| oamount |
++---------+
+|  100.00 |
++---------+
+ //second highest from the given cloumn
+
+************************************************
+9. Today Adam is ordering 3 pencils, 1 file and 2 notebooks. Insert corresponding records in the tables. 
+
+   Order amount should be calculated using query.
+
+insert into order_items values
+()
+
+select sum(prate*pqty) from order_items,products where products.pid = order_items.pid and oid = 8;
+
+>_select sum(prate*pqty) from order_items,products where products.pid = order_items.pid and oid = 8;
++-----------------+
+| sum(prate*pqty) |
++-----------------+
+|             NULL|
++-----------------+
+1 row in set (0.00 sec)
+***********************************
+
+
+10
+
+10. Update the last order of Adam from Pending to Processing and then Paid to Delivered (in two different queries).
+
+update orders set ostatus = 'Processing' where cid = 
+(select cid from customers where cname = 'Adam') order by odate desc limit 1;
+
+>_select * from orders;
+mysql> update orders set ostatus = 'Processing' where cid = any (select cid from customers where cname = 'Adam') order by odate desc limi
+t 1;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+******************************************************************************************
+
+2. Write a PL/SQL stored procedure that selects name from customer table and count the number of characters and words in a string and insert resultant data into temporary table having columns 'count of characters' and 'count of words'.
+
+create table result(
+count_of_characters int,count_of_words int
+);
+
+mysql> create procedure abcd()
+    -> begin
+    ->     declare a varchar(25);
+    ->     declare y int default 0;
+    ->     declare c1 cursor for select cname from customers;
+    ->     declare continue handler for not found set y = 1;
+    ->     open c1;
+    ->     cursor_c1_loop:loop
+    ->     fetch c1 into a;
+    ->     if y = 1 then
+    ->     
+Display all 790 possibilities? (y or n) 
+    ->     leave cursor_c1_loop;
+    ->     end if;
+    ->     insert into result values(length(a),length(a)-length(replace(a,' ',''))+1);
+    ->     end loop cursor_c1_loop;
+    ->     close c1;
+    -> end; //
+Query OK, 0 rows affected (0.02 sec)
+
+
+
+>delimiter ;
+>call abcd() ;
+Query OK, 0 rows affected (0.02 sec)
+
+_select * from temp;
+
+10 rows in set (0.00 sec)
+
+
+
+
+
+

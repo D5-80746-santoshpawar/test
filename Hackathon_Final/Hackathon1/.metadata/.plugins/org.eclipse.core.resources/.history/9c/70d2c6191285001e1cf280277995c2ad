@@ -1,0 +1,9 @@
+package com.moviereview;
+
+public class Movies {
+	
+	int movie_id;
+	String title;
+	Date release;
+	
+}
